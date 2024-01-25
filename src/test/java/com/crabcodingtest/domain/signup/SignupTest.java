@@ -1,9 +1,8 @@
 package com.crabcodingtest.domain.signup;
 
-import com.crabcodingtest.domain.signup.entity.SignupUser;
+import com.crabcodingtest.domain.signup.entity.User;
 import com.crabcodingtest.domain.signup.repository.SignupUserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,14 @@ public class SignupTest {
     @Autowired
     private SignupUserRepository repository;
 
-    private SignupUser signupUser;
+    private User signupUser;
 
     @BeforeEach
     void before(){
-        signupUser = SignupUser.builder()
-                .userName("김용희")
-                .userPassword("1234")
-                .userMail("djdjdddd@khu.ac.kr")
+        signupUser = User.builder()
+                .name("김용희")
+                .password("1234")
+                .mail("djdjdddd@khu.ac.kr")
                 .build();
     }
 
@@ -35,8 +34,8 @@ public class SignupTest {
     @DisplayName("findByUserName 테스트")
     @Transactional(readOnly = true) // 성능향상 (실제로 재보진 않음 ㅎ..)
     void findByUserName(){
-        String userName = signupUser.getUserName();
-        SignupUser findUser = repository.findByUserName(userName);
+        String userName = signupUser.getName();
+        User findUser = repository.findByUserName(userName);
 
         log.info("findUser={}", findUser);
     }
@@ -46,14 +45,14 @@ public class SignupTest {
     @Transactional
     void saveTest(){
         // given
-        SignupUser signupUser = SignupUser.builder()
-                .userName("김용희")
-                .userPassword("1234")
-                .userMail("djdjdddd@khu.ac.kr")
+        User signupUser = User.builder()
+                .name("김용희")
+                .password("1234")
+                .mail("djdjdddd@khu.ac.kr")
                 .build();
 
         // when
-        SignupUser savedUser = repository.save(signupUser);
+        User savedUser = repository.save(signupUser);
         log.info("signupUser={}", signupUser);
         log.info("savedUser={}", savedUser);
 
