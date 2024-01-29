@@ -1,8 +1,12 @@
 package com.crabcodingtest.domain.signup.service;
 
+import com.crabcodingtest.api.mail.MailAuthenticationMessage;
 import com.crabcodingtest.api.mail.MailDTO;
 import com.crabcodingtest.api.mail.MailService;
+import com.crabcodingtest.api.redis.Authentication;
+import com.crabcodingtest.api.redis.RedisRepository;
 import com.crabcodingtest.api.redis.RedisService;
+import com.crabcodingtest.domain.signup.request.UserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.util.Random;
 
 @Slf4j
@@ -25,29 +28,50 @@ public class SignupService {
 //    private final MemberRepository memberRepository;
 
     private final MailService mailService;
-
     private final RedisService redisService;
+    private final RedisRepository repository; // Spring Data의 장점
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
+    // 메일 인증 성공/실패 여부 체크
+    public MailAuthenticationMessage test(UserRequestDTO userRequestDTO){
+        String authCode = userRequestDTO.getAuthCode();
+
+        Authentication find = repository.findByAuthCode(authCode);
+
+        // **조건문이 뭔가 맘에 안듦.
+        if (find == null) {
+            log.info("인증코드 잘못 입력했거나 유효기간 만료");
+            return MailAuthenticationMessage.FAIL;
+        }else if(!find.getMail().equals(userRequestDTO.getMail())){
+            log.info("인증코드가 중복된 아주 아주 드문 경우");
+            return MailAuthenticationMessage.FAIL;
+        }else{
+            log.info("인증완료");
+            return MailAuthenticationMessage.SUCCESS;
+        }
+    }
+
     public void sendAuthCodeMail(MailDTO mailDTO) {
         // 0. 메일 중복 체크
-//        this.checkDuplicatedEmail(toEmail);
+//        checkDuplicatedEmail(toEmail);
 
         // 1. 인증코드 생성
 //        String title = "Travel with me 이메일 인증 번호";
         String authCode = createCode();
-        log.info("authCode={}", authCode);
+        log.info("authCode = {}", authCode);
         mailDTO.setAuthCode(authCode);
 
         // 2. 메일 전송
         mailService.sendMail(mailDTO);
 
         // 3. 인증코드 Redis에 저장
-        // ★이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = "AuthCode " + Email / value = AuthCode )
-        redisService.setValues(AUTH_CODE_PREFIX + mailDTO.getUserMail(),
-                authCode, Duration.ofMillis(this.authCodeExpirationMillis));
+        // (1) RedisTemplate 사용한 버전
+//        redisService.setValues(AUTH_CODE_PREFIX + mailDTO.getUserMail(), authCode, Duration.ofMillis(this.authCodeExpirationMillis));
+
+        // (2) CrudRepository 사용한 버전
+        repository.save(Authentication.of(authCode, mailDTO.getUserMail()));
     }
 
 //    private void checkDuplicatedEmail(String email) {
