@@ -34,8 +34,8 @@ public class SignupTest {
     @DisplayName("findByUserName 테스트")
     @Transactional(readOnly = true) // 성능향상 (실제로 재보진 않음 ㅎ..)
     void findByUserName(){
-        String userName = signupUser.getName();
-        User findUser = repository.findByUserName(userName);
+        String name = signupUser.getName();
+        User findUser = repository.findByName(name);
 
         log.info("findUser={}", findUser);
     }

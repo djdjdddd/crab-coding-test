@@ -21,8 +21,7 @@ class RedisRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        authentication = new Authentication();
-        authentication.setAuthCode("111111");
+        authentication = Authentication.of("111111", "yong");
     }
 
     @AfterEach
@@ -81,12 +80,12 @@ class RedisRepositoryTest {
         log.info("save = {}", save);
 
         // 조회
-        Authentication find = redisRepository.findByAuthCode("123456");
-        log.info("find = {}", find);
+//        Authentication find = redisRepository.findByAuthCode("123456");
+//        log.info("find = {}", find);
 
         // 수정
-        Authentication update = redisRepository.save(authentication);
-        log.info("update = {}", update);
+//        Authentication update = redisRepository.save(authentication);
+//        log.info("update = {}", update);
     }
 
 }

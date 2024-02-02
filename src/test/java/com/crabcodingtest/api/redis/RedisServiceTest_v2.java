@@ -20,10 +20,6 @@ public class RedisServiceTest_v2 {
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
-//    final StringRedisTemplate srt;
-    // cf. final 키워드와 @RequiredArgsConstructor를 이용한 의존성 주입 하지 말 것
-    // 사용시 발생 에러 : org.junit.jupiter.api.extension.ParameterResolutionException: No ParameterResolver registered for parameter
-    // 해결 ref. https://pinokio0702.tistory.com/189
 
     static final String KEY = "용희";
     static final String VALUE = "5895";
