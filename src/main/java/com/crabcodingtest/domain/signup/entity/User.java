@@ -6,11 +6,10 @@ import lombok.*;
 @Entity
 @Table(name = "user")
 @Getter @Setter
-@Builder // @AllArgsConstructor를 필요로 함.
+@Builder
 @ToString
-//@NoArgsConstructor // 에러남
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     // 이름
     // 이메일
@@ -22,16 +21,9 @@ public class User {
     @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
-
     private String name;
-
     private String password;
-
     private String mail;
-
     private String nickname;
-
     private String phoneNo;
-    @Embedded
-    private Address address;
 }
