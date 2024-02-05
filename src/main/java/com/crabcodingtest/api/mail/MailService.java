@@ -37,10 +37,10 @@ public class MailService {
         log.debug("mailDTO={}", mailDTO);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mailDTO.getUserMail()); // 인증메일 수신자
+        message.setTo(mailDTO.getMail()); // 인증메일 수신자
         message.setFrom(MAIL_SENDER.address); // 인증메일 발신자
         message.setSubject("Test : 회원가입 인증 코드"); // 인증메일 제목
-        message.setText("회원님의 인증 코드는 " + mailDTO.getAuthCode() + " 입니다."); // 인증메일 내용 (인증코드 포함)
+        message.setText("회원님의 인증 코드는 " + mailDTO.getAuthenticationCode() + " 입니다."); // 인증메일 내용 (인증코드 포함)
 
         return message;
 
