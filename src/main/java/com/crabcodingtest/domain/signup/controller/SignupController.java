@@ -2,16 +2,17 @@ package com.crabcodingtest.domain.signup.controller;
 
 import com.crabcodingtest.api.mail.MailAuthenticationMessage;
 import com.crabcodingtest.api.mail.MailDTO;
-import com.crabcodingtest.api.mail.MailSender;
-import com.crabcodingtest.api.mail.MailService;
+import com.crabcodingtest.common.exception.ValidationException;
 import com.crabcodingtest.domain.signup.request.SignupRequestDTO;
 import com.crabcodingtest.domain.signup.service.SignupService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원가입", description = "회원가입 API") // swagger 적용 위한 어노테이션
@@ -57,17 +58,21 @@ public class SignupController {
     }
 
     /**
-     * 
-     * @param signupRequestDTO 
+     * @param signupRequestDTO
      * ★form 태그의 action의 문제점 : setter 메서드가 없으면 값 매핑이 안됨. 왜냐면 스프링이 DTO 객체를 생성하고 Setter를 통해 값을 할당하기 때문에...
      * ★form 태그는 쓰되 json 데이터 만들어서 넘겨주면 당연히 setter 메서드가 없어도 됨. 대신 @RequestBody 어노테이션 필요
      */
-    @PostMapping("/register")
+    @PostMapping("/signup")
     @ResponseBody
-    public void register(@RequestBody SignupRequestDTO signupRequestDTO){ 
-        log.info("회원가입 버튼 누름");
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            throw new ValidationException("회원가입 유효성 검사 실패.", bindingResult.getFieldErrors()); // **(Throwable) 캐스팅이 왜 필요 없지?? -> 커스텀 ValidationException 클래스를 사용 중이었음.
+        }
+        log.info("회원가입 유효성 검사 통과.");
         log.info("signupRequestDTO = {}", signupRequestDTO);
-        signupService.register(signupRequestDTO);
+        signupService.signup(signupRequestDTO);
+
+        return ResponseEntity.ok("SUCCESS");
     }
 
 }
