@@ -149,7 +149,7 @@ public class SignupService {
         User user = User.builder()
                 .name(signupRequestDTO.getName())
                 .mail(signupRequestDTO.getMail())
-                .nickname(signupRequestDTO.getNickname()) // TODO. username(signUpRequest.getEmail()) ---> username 과 email 필드에 똑같이 email 정보를 넣어주는데 username 필드를 별도로 두는 이유는 소셜 로그인 때문입니다. Security 인증에서 인증 결과 정보를 저장하는 Authenticate 객체를 생성할 때 username 값은 필수로 요구 되는데 소셜 로그인에서는 경우에 따라 email 정보가 없을 수 있습니다. 이런 경우에는 email 값을 username 으로 사용하게 되면 username 값이 없기 때문에 인증이 불가능하게 됩니다. 그런데, 소셜 로그인의 경우에는 유저가 username 값을 직접 사용할 일은 없습니다. 이러한 점을 이용하여 일반 회원 가입의 경우에는 username 값으로 email 값을 사용하고 소셜 로그인의 경우에는 별도의 username 값을 생성하여 등록해주기 위해 username 필드를 별도로 사용하였습니다.
+                .username(signupRequestDTO.getUsername()) // TODO. username(signUpRequest.getEmail()) ---> username 과 email 필드에 똑같이 email 정보를 넣어주는데 username 필드를 별도로 두는 이유는 소셜 로그인 때문입니다. Security 인증에서 인증 결과 정보를 저장하는 Authenticate 객체를 생성할 때 username 값은 필수로 요구 되는데 소셜 로그인에서는 경우에 따라 email 정보가 없을 수 있습니다. 이런 경우에는 email 값을 username 으로 사용하게 되면 username 값이 없기 때문에 인증이 불가능하게 됩니다. 그런데, 소셜 로그인의 경우에는 유저가 username 값을 직접 사용할 일은 없습니다. 이러한 점을 이용하여 일반 회원 가입의 경우에는 username 값으로 email 값을 사용하고 소셜 로그인의 경우에는 별도의 username 값을 생성하여 등록해주기 위해 username 필드를 별도로 사용하였습니다.
                 .password(signupRequestDTO.getPassword()) // TODO. 암호화 필요 : passwordEncoder.encode
                 .phoneNo(signupRequestDTO.getPhoneNo()) // TODO. 암호화 필요
                 .address(signupRequestDTO.getAddress())

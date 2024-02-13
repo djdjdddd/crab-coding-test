@@ -25,9 +25,9 @@ public class User extends BaseEntity {
     private String mail;
 
     @Column(nullable = false, unique = true)
-    private String nickname;    // 닉네임
+    private String username;    // ID
 
-    private String password;
+    private String password;    // PW
 
     private String phoneNo;
 
@@ -44,11 +44,11 @@ public class User extends BaseEntity {
     private List<AuthorityType> authorities = new ArrayList<>();
 
     @Builder
-    public User(String name, String password, String mail, String nickname, String phoneNo, String address, UserType type){
+    public User(String name, String password, String mail, String username, String phoneNo, String address, UserType type){
         this.name = name;
         this.password = password;
         this.mail = mail;
-        this.nickname = nickname;
+        this.username = username;
         this.phoneNo = phoneNo;
         this.address = address;
         this.authorities.add(AuthorityType.ROLE_USER); // 회원은 기본적으로 ROLE_USER 권한을 가지지만 추가적으로 권한을 더 가질 수 있기 때문에 List 타입으로 선언했습니다.... (중략)
